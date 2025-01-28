@@ -1,0 +1,77 @@
+{% extends "layout.html" %} {% block content %}
+<!-- Page Header-->
+<header
+  class="masthead"
+  style="background-image: url('{{ url_for('static', filename='img/home-bg.jpg') }}')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1>Admin Panel</h1>
+          <span class="subheading">Manage your Posts</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Main Content-->
+<div class="container px-4 px-lg-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+      <h1>Upload File</h1>
+      <div class="row">we will update file uploader here</div>
+      <a href="/edit/0">
+        <button class="btn btn-primary float-left">add</button></a
+      >
+      <a href="/edit/logout">
+        <button class="btn btn-primary float-left">logout</button></a
+      >
+      <hr />
+      <h1>upload a file</h1>
+      <form action="/uploader" type="post">
+        <input type="file" name="file1" />
+        <input class="btn btn-primary float-left" type="submit" />
+      </form>
+      {% if session %}
+      <h1>Edit Posts {{session.username}}</h1>
+
+      {% endif %}
+      <body>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Sno</th>
+              <th>Title</th>
+              <th>Date</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for post in post %}
+
+            <tr>
+              <td>{{post.sno}}</td>
+              <td>{{post.title}}</td>
+              <td>{{post.date}}</td>
+              <th>
+                <a href="/edit/{{post.sno}}" /><button
+                  class="btn btn-primary float-left"
+                >
+                  Edit
+                </button>
+              </th>
+              <th>
+                <button class="btn btn-primary float-left">Delete</button>
+              </th>
+            </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </body>
+    </div>
+  </div>
+</div>
+{% endblock %}
