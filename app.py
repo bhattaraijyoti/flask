@@ -13,7 +13,9 @@ with open('config.json', 'r') as c:
     params = json.load(c)['params']
   
 app = Flask(__name__)
-app.secret_key = 'your-secret-key'
+app.secret_key = 'your_secret_key_here'
+
+app.config['UPLOAD_FOLDER']=params['upload_location']
 
 # Mail Configuration
 app.config.update(
@@ -26,8 +28,6 @@ app.config.update(
 mail = Mail(app) 
 
 
-
-app.config['UPLOAD_FOLDER']=params['upload_location']
 
 # Database Configuration
 if local_server:
@@ -188,16 +188,40 @@ def post_route(post_slug):
 
 @app.route("/uploader" , methods=['GET', 'POST'])
 def uploader():
+    print(session)
     if ('user' in session and session['user']==params['admin_user']):
-        if request.method==['POST']:
+        if request.method=='POST':
             f=request.files['file1']
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
             return "Uploaded successfully"
         
-    else:
-        print("nope")    
+        else: 
+            return "Unable to Upload"
+    return "Unauthorized"
    
-  
+@app.route("/logout")
+def logout():
+    session.pop('user')
+    return redirect('/dashboard')
+
+@app.route("/delete/<string:sno>", methods=['GET', 'POST'])
+def delete(sno):
+    print("session:", session)  # Debugging session
+
+    # Check if 'user' exists in session and is the admin
+    if 'user' in session and session['user'] == params['admin_user']:
+        post = Post.query.filter_by(sno=sno).first() 
+        
+        if post:
+            db.session.delete(post)
+            db.session.commit()
+            print(f"Post {sno} deleted.")
+        else:
+            print(f"Post {sno} not found.")
+        
+        return redirect('/dashboard')
+    
+    return "Unauthorized", 403  # You can customize this message
 
 
 

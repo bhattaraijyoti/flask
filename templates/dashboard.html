@@ -29,7 +29,7 @@
       >
       <hr />
       <h1>upload a file</h1>
-      <form action="/uploader" type="post">
+      <form action="/uploader" method="post" enctype="multipart/form-data">
         <input type="file" name="file1" />
         <input class="btn btn-primary float-left" type="submit" />
       </form>
@@ -55,16 +55,16 @@
               <td>{{post.sno}}</td>
               <td>{{post.title}}</td>
               <td>{{post.date}}</td>
-              <th>
-                <a href="/edit/{{post.sno}}" /><button
-                  class="btn btn-primary float-left"
+              <td>
+                <a href="/edit/{{post.sno}}"
+                  ><button class="btn btn-primary float-left">Edit</button></a
                 >
-                  Edit
-                </button>
-              </th>
-              <th>
-                <button class="btn btn-primary float-left">Delete</button>
-              </th>
+              </td>
+              <td>
+                <a href="/delete/{{post.sno}}">
+                  <button class="btn btn-primary float-left">Delete</button></a
+                >
+              </td>
             </tr>
 
             {% endfor %}
